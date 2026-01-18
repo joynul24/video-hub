@@ -4,6 +4,11 @@
     font-family: "Inter", sans-serif;
 }
 
+
+html{
+ overflow-y: scroll;   
+}
+
 .container {
     max-width: 1520px;
     margin: 0 auto;

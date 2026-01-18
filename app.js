@@ -1,8 +1,8 @@
 function convertSeconds(totalSeconds) {
-    const hours = Math.floor(totalSeconds / 3600); 
-    const minutes = Math.floor((totalSeconds % 3600) / 60); 
-    const seconds = totalSeconds % 60; 
-    return `${hours}hr ${minutes} min ${seconds} sec ago` 
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    return `${hours}hr ${minutes} min ${seconds} sec ago`
 }
 
 
@@ -14,8 +14,18 @@ const loadCategorybtns = async () => {
     const cagetoryBtnContainer = document.getElementById("category-btns");
     categories.forEach(item => {
         const btn = document.createElement("button");
-        btn.classList.add("btn", "btn-active", "border-none")
+        btn.classList.add("btn", "btn-active", "border-none");
         btn.textContent = item.category;
+
+        btn.addEventListener("click", () => {
+            document.querySelectorAll("#category-btns button").forEach(b => {
+                b.style.backgroundColor = "";
+                b.style.color = "";
+            });
+            btn.style.backgroundColor = "#FF1F3D";
+            btn.style.color = "white"; loadVideosByCategory(item.category_id);
+        });
+
         cagetoryBtnContainer.append(btn)
     });
 };
@@ -28,8 +38,56 @@ const loadAllVideos = async () => {
 };
 
 
+
+const handleAllVideoBtn = async () => {
+    document.querySelectorAll("#category-btns button").forEach(b => {
+        b.style.backgroundColor = "";
+        b.style.color = "";
+    });
+
+    const allBtn = document.getElementById("allVideosBtn");
+    allBtn.style.backgroundColor = "#FF1F3D";
+    allBtn.style.color = "white";
+
+    const res = await fetch("https://openapi.programming-hero.com/api/phero-tube/videos");
+    const data = await res.json();
+    displayAllVideos(data.videos);
+};
+
+
+
+
+const loadVideosByCategory = async (categoryId) => {
+    const res = await fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${categoryId}`);
+    const data = await res.json();
+    displayAllVideos(data.category);
+};
+
+
 const displayAllVideos = (videos) => {
     const videosContainer = document.getElementById("videos-container");
+    videosContainer.innerHTML = "";
+
+    if (!videos || videos.length === 0) {
+    const noDataDiv = document.createElement("div");
+    noDataDiv.classList.add("flex", "flex-col", "justify-center", "items-center", "gap-8", "mt-30")
+    noDataDiv.innerHTML = `
+     <img 
+      src="./assets/error-img.png" 
+      alt="no data" 
+      class="w-24 h-24 md:w-40 md:h-40 object-contain"
+    />
+    <h2 class="text-lg sm:text-2xl md:text-3xl font-bold text-gray-700">
+      Oops!! Sorry, There is no content here
+    </h2>
+        `
+        videosContainer.appendChild(noDataDiv);
+        videosContainer.classList.remove("grid");
+        return;
+    } else {
+        videosContainer.classList.add("grid");
+    }
+
     videos.forEach(video => {
         const div = document.createElement("div");
         div.classList.add("card")
