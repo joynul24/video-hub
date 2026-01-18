@@ -9,9 +9,9 @@
     <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body class="font-inter px-2">
+<body class="container font-inter px-2">
     <header>
-        <nav class="container flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0 py-4 sm:py-8 border-b-2 border-gray-300">
+        <nav class="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0 py-4 sm:py-8 border-b-2 border-gray-300">
   <!-- logo -->
   <div class="flex items-center gap-2">
     <img class="w-8 sm:w-10 md:w-12" src="./assets/play-button.png" alt="logo">
@@ -41,6 +41,12 @@
          <!-- category all btns -->
           <button class="btn btn-active border-none">All</button>
       </div>
+
+      <!-- All Video Secitons -->
+       <section id="videos-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          
+       </section>
+
     </main>
 
 <script src="./app.js"></script>
