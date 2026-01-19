@@ -31,6 +31,16 @@ const loadCategorybtns = async () => {
 };
 
 
+document.getElementById("search-input").addEventListener("keyup", async(searchText)=> {
+    const searchValue = searchText.target.value;
+
+    const res = await fetch(`https://openapi.programming-hero.com/api/phero-tube/videos?title=${searchValue}`);
+    const data = await res.json();
+    displayAllVideos(data.videos);
+});
+
+
+
 const loadAllVideos = async () => {
     const res = await fetch(`https://openapi.programming-hero.com/api/phero-tube/videos`);
     const data = await res.json();
