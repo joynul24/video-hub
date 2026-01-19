@@ -31,13 +31,37 @@ const loadCategorybtns = async () => {
 };
 
 
-document.getElementById("search-input").addEventListener("keyup", async(searchText)=> {
+document.getElementById("search-input").addEventListener("keyup", async (searchText) => {
     const searchValue = searchText.target.value;
 
     const res = await fetch(`https://openapi.programming-hero.com/api/phero-tube/videos?title=${searchValue}`);
     const data = await res.json();
     displayAllVideos(data.videos);
 });
+
+
+function parseViews(views) {
+    if (views.toUpperCase().includes("K")) {
+        return parseFloat(views) * 1000;
+    }
+    if (views.toUpperCase().includes("M")) {
+        return parseFloat(views) * 1000000;
+    }
+    return parseFloat(views);
+}
+
+
+
+
+const handleSortByViews = async () => {
+    const res = await fetch("https://openapi.programming-hero.com/api/phero-tube/videos");
+    const data = await res.json();
+    console.log(data)
+    const sortedVideos = data.videos.sort((a, b) => {
+        return parseViews(b.others.views) - parseViews(a.others.views);
+    });
+    displayAllVideos(sortedVideos);
+};
 
 
 
@@ -79,9 +103,9 @@ const displayAllVideos = (videos) => {
     videosContainer.innerHTML = "";
 
     if (!videos || videos.length === 0) {
-    const noDataDiv = document.createElement("div");
-    noDataDiv.classList.add("flex", "flex-col", "justify-center", "items-center", "gap-8", "mt-30")
-    noDataDiv.innerHTML = `
+        const noDataDiv = document.createElement("div");
+        noDataDiv.classList.add("flex", "flex-col", "justify-center", "items-center", "gap-8", "mt-30")
+        noDataDiv.innerHTML = `
      <img 
       src="./assets/error-img.png" 
       alt="no data" 
