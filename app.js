@@ -132,6 +132,7 @@ const displayAllVideos = (videos) => {
       alt="Video" />
      <span> ${video.others.posted_date ? `<span class="absolute right-2 bottom-2 bg-black text-white p-2 rounded text-sm">${convertSeconds(video.others?.posted_date)}</span>` : ""} </span>
   </figure>
+  <div>
   <div class="flex gap-2 py-5">
      <img class="w-10 h-10 rounded-full object-cover" src="${video.authors[0].profile_picture}" alt="Profile Picture"/>
      <div class="flex flex-col gap-1 md:gap-2">
@@ -139,6 +140,8 @@ const displayAllVideos = (videos) => {
        <p class="flex items-center gap-1 text-gray-600">${video.authors[0].profile_name} <span> ${video.authors[0].verified ? `<img src="./assets/verifed.png" alt="verifed-icon"/>` : ""} </span></p>
        <p class="text-gray-600">${video.others.views} Views</p>
      </div>
+  </div>
+   <button onclick="handleDetails('${video.video_id}')" class="btn btn-sm bg-[#FF1F3D] text-white border-none">Details</button>
   </div>
        `
         videosContainer.append(div);
@@ -149,3 +152,34 @@ const displayAllVideos = (videos) => {
 
 loadCategorybtns();
 loadAllVideos();
+
+
+
+const handleDetails = async (videoId) => {
+  try {
+    const res = await fetch(`https://openapi.programming-hero.com/api/phero-tube/video/${videoId}`);
+    const data = await res.json();
+    const video = data.video || data;
+
+    const modal = document.getElementById("my_modal_5");
+    const modalContent = document.getElementById("video-modal-content");
+
+    modalContent.innerHTML = `
+      <h2 class="text-lg md:text-xl font-bold mb-2">${video.title}</h2>
+      <img src="${video.thumbnail}" alt="Video Thumbnail" 
+           class="w-full h-40 sm:h-48 md:h-64 object-cover mb-4 rounded"/>
+      <p class="text-gray-700 text-sm md:text-base mb-2">${video.description}</p>
+      <div class="flex items-center gap-2">
+        <img src="${video.authors[0].profile_picture}" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full"/>
+        <span class="font-semibold text-sm md:text-base">${video.authors[0].profile_name}</span>
+        ${video.authors[0].verified ? `<img src="./assets/verifed.png" alt="verified" class="w-4 h-4"/>` : ""}
+      </div>
+      <p class="text-gray-600 mt-2 text-sm md:text-base">${video.others.views} Views</p>
+    `;
+
+    modal.showModal();
+  } catch (error) {
+    console.error("Error loading video details:", error);
+  }
+};
+
